@@ -10,7 +10,6 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
 # Get environment's variables
-CHAT_ID = environ.get('CHAT_ID')
 ADMIN_CHAT_ID = environ.get('ADMIN_CHAT_ID')
 RECEIVER_ID = environ.get('RECEIVER_ID')
 
