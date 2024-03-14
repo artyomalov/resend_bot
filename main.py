@@ -24,6 +24,9 @@ async def resend_file_capture(app: Client, message: Message):
     Resends messages with videos or files to selected chat if message's caption contains keywords.
     """
     try:
+        if message.sender_chat:
+            return
+
         if not message.from_user.id:
             return
 
@@ -44,6 +47,7 @@ async def resend_file_capture(app: Client, message: Message):
     except RPCError as error:
         await app.send_message(chat_id=ADMIN_CHAT_ID, text=f'TG error: {str(error)}')
 
+
     except Exception as error:
         await app.send_message(chat_id=ADMIN_CHAT_ID, text=f'Another error: {str(error)}')
 
@@ -55,8 +59,12 @@ async def resend_text_message(app: Client, message: Message):
     Resends text messages to selected chat.
     """
     try:
+        if message.sender_chat:
+            return
+
         if not message.from_user.id:
             return
+
         is_suitable = services.check_is_suitable(message.text)
 
         if is_suitable:
@@ -68,13 +76,10 @@ async def resend_text_message(app: Client, message: Message):
                                         )
 
     except RPCError as error:
-        logging.error(f'Error: {message.text}')
         await app.send_message(chat_id=ADMIN_CHAT_ID, text=f'TG error: {str(error)}')
 
     except Exception as error:
-        logging.error(f'Error: {message.text}')
         await app.send_message(chat_id=ADMIN_CHAT_ID, text=f'Another error: {str(error)}')
 
 
 app.run()
-
